@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hub and spoke - Rural Mobility Centre of Excellence</title>
+<link rel="icon" href="logos/favicon.svg" type="image/svg+xml">
+<style>
+  body { font-family: Georgia, Gelasio, serif; margin: 0; background: #f4f5f1; color: #2E3538; }
+  .slide { box-sizing: border-box; max-width: 1100px; margin: 0 auto; padding: 24px 40px; display: flex; flex-direction: column; justify-content: center; }
+  .slide:focus { outline: none; }
+  h1 { font-size: 44px; }
+  h1, h2 { color: #2E3538; border-top: 4px solid #4F7D5C; padding-top: 12px; margin: 0 0 6px; }
+  .slide > p { margin: 0 0 14px; color: #4b5154; max-width: 820px; font-size: 17px; line-height: 1.45; }
+  .note { font-style: italic; }
+  .card { background: #fff; border: 1px solid #e1e4dc; border-radius: 8px; padding: 20px; min-width: 0; }
+  figure { margin: 0; text-align: center; min-width: 0; max-width: 100%; }
+  figure img { max-width: 100%; height: auto; }
+  figcaption { font-size: 14px; color: #4b5154; margin-top: 8px; }
+  figcaption a { color: #4F7D5C; }
+  button { font: inherit; font-size: 14px; padding: 6px 14px; border: 1px solid #4F7D5C; color: #4F7D5C; background: #fff; border-radius: 4px; cursor: pointer; }
+  button[aria-pressed="true"] { background: #4F7D5C; color: #fff; }
+
+  .journey { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 24px; align-items: center; }
+  #journey { display: block; width: min(360px, 55vh, 100%); margin: 0 auto; }
+  .controls { display: flex; flex-direction: column; gap: 14px; align-items: flex-start; }
+  #destination { font-size: 32px; font-weight: bold; color: #E39B2D; min-height: 1.2em; margin: 0; }
+  #destinations { display: flex; flex-wrap: wrap; gap: 8px; }
+
+  #centres { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 16px; align-items: start; }
+  #centres img { display: block; width: 100%; max-width: 160px; height: auto; margin: 0 auto; }
+
+  .uses { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+  .uses .card { display: flex; flex-direction: column; justify-content: space-between; align-items: center; gap: 12px; }
+  .uses .card > div { flex: 1; display: flex; align-items: center; justify-content: center; min-width: 0; max-width: 100%; }
+  .uses .wide { grid-column: span 2; }
+  .uses .card > div > img { height: 15vh; width: auto; max-width: 100%; object-fit: contain; }
+  .tabs { flex-direction: column; gap: 10px; }
+  .tab { display: flex; align-items: center; gap: 8px; width: 220px; padding: 7px 10px; background: #dee1e6; border-radius: 8px 8px 0 0; font: 12px Arial, sans-serif; }
+  .tab.dark { background: #35363a; color: #e8eaed; }
+  .tab .x { margin-left: auto; opacity: .6; }
+
+  .files { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px 28px; background: #eceee8; }
+  .files.lockups { grid-template-columns: minmax(0, 1fr); }
+  .files h3 { font-size: 13px; text-transform: uppercase; letter-spacing: .05em; color: #4b5154; margin: 0 0 6px; }
+  .files ul { list-style: none; margin: 0 0 12px; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(68px, 1fr)); gap: 4px; }
+  .files.lockups ul { display: flex; flex-wrap: wrap; gap: 4px 12px; }
+  .files.lockups img { height: 52px; object-fit: contain; }
+  .files.lockups ul.themes img { height: 40px; }
+  .files a { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 6px 4px; border-radius: 6px; color: #4F7D5C; font-size: 12px; text-align: center; text-decoration: none; }
+  .files a:hover, .files a:focus-visible { background: #fff; text-decoration: underline; }
+  .files img { height: 44px; width: auto; max-width: 100%; }
+  .files a.dark img { background: #2E3538; border-radius: 4px; }
+
+  .deck body { overflow: hidden; }
+  .deck .slide { height: calc(100dvh - 56px); overflow-y: auto; justify-content: safe center; }
+  .deck .slide:not(.current) { display: none; }
+  .deck-nav { position: fixed; left: 0; right: 0; bottom: 0; height: 56px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; gap: 6px; padding: 0 12px; background: #4F7D5C; }
+  .deck-nav button, .deck-nav a { border: 0; background: none; color: #fff; opacity: .75; padding: 8px 10px; font: inherit; text-decoration: none; }
+  .deck-nav button:hover, .deck-nav button:focus-visible, .deck-nav a:hover, .deck-nav a:focus-visible { opacity: 1; }
+  .deck-nav a[aria-current="step"] { opacity: 1; font-weight: bold; box-shadow: inset 0 -3px #E39B2D; }
+  .deck-nav button:disabled { opacity: .3; cursor: default; }
+  .deck-nav .count { display: none; color: #fff; font-size: 14px; min-width: 48px; text-align: center; }
+
+  @media (max-width: 800px) {
+    .slide { padding: 24px 16px; }
+    h1 { font-size: 34px; }
+    #centres { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .uses, .files, .journey { grid-template-columns: minmax(0, 1fr); }
+    .controls { align-items: center; }
+    #journey { width: min(260px, 32vh, 100%); }
+    .uses .card > div > img { height: auto; }
+    .uses .wide { grid-column: auto; }
+    .deck-nav .title { display: none; }
+    .deck-nav .count { display: block; }
+  }
+</style>
+</head>
+<body>
+
+<section class="slide" id="hub-and-spoke" data-title="Hub and spoke">
+<h1>Hub and spoke</h1>
+<p>The Rural Mobility Centre of Excellence was set up by Transport East to give local and national partners "a dedicated rural mobility policy resource". The mark is a ring for the Centre with spokes out to the stops it serves, which is roughly how demand-responsive transport works, with one hub and journeys running out to villages on request. The spokes are sage, the Centre is charcoal, and one stop is amber for the journey being made.</p>
+<p class="note">These are unofficial concepts, made to show how a plain-JS brand kit works. They aren't the Centre's branding and haven't been endorsed by Transport East. <a href="https://github.com/zacharypaynethompson/rural-mobility-coe-logo-concepts#sources">Sources</a></p>
+<div class="card journey">
+<svg id="journey" viewBox="0 0 100 100" role="img" aria-label="The mark drawing itself, then a journey running out to each destination in turn"></svg>
+<div class="controls">
+<p id="destination" aria-live="polite">&nbsp;</p>
+<p>Rural transport is how people get to a GP, a school, the shops and work. Pick one to send a journey out to it.</p>
+<div id="destinations"><button>Health</button><button>Education</button><button>Retail</button><button>Employment</button></div>
+<button id="replay">Replay</button>
+</div>
+</div>
+</section>
+
+<section class="slide" id="themes" data-title="Themes">
+<h2>The centre changes</h2>
+<p>The six themes come from the Centre's own work. Each keeps the ring and spokes, puts its own pictogram in the middle and turns its own stop amber. The pictograms are placeholders.</p>
+<div class="card" id="centres">
+<figure><img src="logos/theme-0.svg" width="160" alt=""><figcaption>Community Transport</figcaption></figure>
+<figure><img src="logos/theme-1.svg" width="160" alt=""><figcaption>Active Travel</figcaption></figure>
+<figure><img src="logos/theme-2.svg" width="160" alt=""><figcaption>Digital Connectivity</figcaption></figure>
+<figure><img src="logos/theme-3.svg" width="160" alt=""><figcaption>Accessibility</figcaption></figure>
+<figure><img src="logos/theme-4.svg" width="160" alt=""><figcaption>Demand-Responsive Transport</figcaption></figure>
+<figure><img src="logos/theme-5.svg" width="160" alt=""><figcaption>Research &amp; Evaluation</figcaption></figure>
+</div>
+</section>
+
+<section class="slide" id="in-use" data-title="In use">
+<h2>In use</h2>
+<p>The mark is used with the name, as a theme's own lockup, as an app icon and in a browser tab.</p>
+<div class="uses">
+<figure class="card wide"><div><img src="logos/lockup-two-line.svg" height="100" alt="Rural Mobility Centre of Excellence lockup"></div><figcaption>With the name, over two lines. <a href="logos/lockup-two-line.svg" download>Download SVG</a></figcaption></figure>
+<figure class="card"><div><img src="logos/tile-sage.svg" width="96" alt="Sage app tile"></div><figcaption>An app tile. <a href="logos/tile-sage.svg" download>Download SVG</a></figcaption></figure>
+<figure class="card wide"><div><img src="logos/theme-lockup-4.svg" height="72" alt="Demand-Responsive Transport from the Rural Mobility Centre of Excellence"></div><figcaption>A theme's own lockup. <a href="logos/theme-lockup-4.svg" download>Download SVG</a></figcaption></figure>
+<figure class="card"><div class="tabs">
+<div class="tab"><img src="logos/favicon-light.svg" width="16" height="16" alt=""><span>Rural Mobility CoE</span><span class="x">×</span></div>
+<div class="tab dark"><img src="logos/favicon-dark.svg" width="16" height="16" alt=""><span>Rural Mobility CoE</span><span class="x">×</span></div>
+</div><figcaption>From 16 to 32px the mark uses a heavier ring and evenly spaced spokes, and on a dark theme the ring lightens and the centre turns white. <a href="logos/favicon.svg" download>Download SVG</a></figcaption></figure>
+</div>
+</section>
+
+<section class="slide" id="files" data-title="Marks and icons">
+<h2>All files: marks and icons</h2>
+<p>Every file is an SVG, and the text is set in Georgia rather than converted to outlines, so it can be edited. Click one to download it.</p>
+<div class="card files">
+<div>
+<h3>Marks</h3><ul>
+<li><a href="logos/mark.svg" download><img src="logos/mark.svg" alt="">Mark</a></li>
+<li><a href="logos/mono.svg" download><img src="logos/mono.svg" alt="">White on sage</a></li>
+<li><a href="logos/small-mark.svg" download><img src="logos/small-mark.svg" alt="">Small cut, 16 to 32px</a></li>
+<li><a href="logos/small-mono.svg" download><img src="logos/small-mono.svg" alt="">Small, white on sage</a></li>
+</ul>
+<h3>Themes</h3><ul>
+<li><a href="logos/theme-0.svg" download><img src="logos/theme-0.svg" alt="">Community</a></li>
+<li><a href="logos/theme-1.svg" download><img src="logos/theme-1.svg" alt="">Active</a></li>
+<li><a href="logos/theme-2.svg" download><img src="logos/theme-2.svg" alt="">Digital</a></li>
+<li><a href="logos/theme-3.svg" download><img src="logos/theme-3.svg" alt="">Access</a></li>
+<li><a href="logos/theme-4.svg" download><img src="logos/theme-4.svg" alt="">On demand</a></li>
+<li><a href="logos/theme-5.svg" download><img src="logos/theme-5.svg" alt="">Research</a></li>
+</ul>
+</div>
+<div>
+<h3>Icons</h3><ul>
+<li><a href="logos/favicon.svg" download><img src="logos/favicon.svg" alt="">Favicon, adapts to dark</a></li>
+<li><a href="logos/favicon-light.svg" download><img src="logos/favicon-light.svg" alt="">Favicon, light</a></li>
+<li><a href="logos/favicon-dark.svg" download class="dark"><img src="logos/favicon-dark.svg" alt="">Favicon, dark</a></li>
+<li><a href="logos/tile-white.svg" download><img src="logos/tile-white.svg" alt="">White tile</a></li>
+<li><a href="logos/tile-sage.svg" download><img src="logos/tile-sage.svg" alt="">Sage tile</a></li>
+<li><a href="logos/maskable.svg" download><img src="logos/maskable.svg" alt="">Maskable</a></li>
+<li><a href="logos/apple-touch.svg" download><img src="logos/apple-touch.svg" alt="">Apple touch</a></li>
+</ul>
+</div>
+</div>
+</section>
+
+<section class="slide" id="lockups" data-title="Lockups">
+<h2>All files: lockups</h2>
+<div class="card files lockups">
+<div>
+<h3>Lockups</h3><ul>
+<li><a href="logos/lockup-two-line.svg" download><img src="logos/lockup-two-line.svg" alt="">Two lines</a></li>
+<li><a href="logos/lockup-line.svg" download><img src="logos/lockup-line.svg" alt="">One line</a></li>
+<li><a href="logos/lockup-stacked.svg" download><img src="logos/lockup-stacked.svg" alt="">Stacked</a></li>
+<li><a href="logos/lockup-strapline.svg" download><img src="logos/lockup-strapline.svg" alt="">With the strapline</a></li>
+<li><a href="logos/lockup-guides.svg" download><img src="logos/lockup-guides.svg" alt="">Clear space: two stops' widths on every side</a></li>
+</ul>
+<h3>Theme lockups</h3><ul class="themes">
+<li><a href="logos/theme-lockup-0.svg" download><img src="logos/theme-lockup-0.svg" alt="">Community Transport</a></li>
+<li><a href="logos/theme-lockup-1.svg" download><img src="logos/theme-lockup-1.svg" alt="">Active Travel</a></li>
+<li><a href="logos/theme-lockup-2.svg" download><img src="logos/theme-lockup-2.svg" alt="">Digital Connectivity</a></li>
+<li><a href="logos/theme-lockup-3.svg" download><img src="logos/theme-lockup-3.svg" alt="">Accessibility</a></li>
+<li><a href="logos/theme-lockup-4.svg" download><img src="logos/theme-lockup-4.svg" alt="">Demand-Responsive Transport</a></li>
+<li><a href="logos/theme-lockup-5.svg" download><img src="logos/theme-lockup-5.svg" alt="">Research &amp; Evaluation</a></li>
+</ul>
+</div>
+</div>
+</section>
+
+<script type="module" src="page.js"></script>
+<script type="module" src="slides.js"></script>
+</body>
+</html>

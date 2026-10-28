@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
+<g id="community-transport" fill="none" stroke="currentColor" stroke-width="8" stroke-linecap="round" stroke-linejoin="round">
+<rect x="28" y="32" width="72" height="50" rx="10"/>
+<path d="M28 58 H100 M52 32 V58 M76 32 V58"/>
+<circle cx="46" cy="88" r="9" fill="currentColor" stroke="none"/>
+<circle cx="82" cy="88" r="9" fill="currentColor" stroke="none"/>
+</g>
+</svg>

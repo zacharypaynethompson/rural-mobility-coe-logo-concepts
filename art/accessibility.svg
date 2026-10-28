@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
+<g id="accessibility" fill="none" stroke="currentColor" stroke-width="8" stroke-linecap="round" stroke-linejoin="round">
+<circle cx="60" cy="30" r="8" fill="currentColor" stroke="none"/>
+<path d="M60 46 V70 H82 L90 94 M60 56 H78 M46 62 A22 22 0 1 0 76 92"/>
+</g>
+</svg>
